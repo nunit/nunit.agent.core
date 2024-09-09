@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <RootNamespace>NUnit.Tests</RootNamespace>
+    <TargetFrameworks>net462;netcoreapp3.1;net6.0;net7.0;net8.0</TargetFrameworks>
+    <OutputPath>..\..\..\bin\$(Configuration)\</OutputPath>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\nunit.snk</AssemblyOriginatorKeyFile>
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <NuGetAudit>false</NuGetAudit>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Product>NUnit Engine</Product>
+    <AssemblyTitle>Mock Assembly ($(TargetFramework))</AssemblyTitle>
+    <Description>Assembly used in testing the engine</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.13.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\nunit.snk" Link="nunit.snk" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
+  </ItemGroup>
+
+</Project>
