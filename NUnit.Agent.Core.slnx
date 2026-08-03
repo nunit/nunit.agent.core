@@ -1,0 +1,20 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".config/dotnet-tools.json" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="build" />
+    <File Path="build.cake" />
+    <File Path="build.cmd" />
+    <File Path="build.ps1" />
+    <File Path="build.sh" />
+    <File Path="NuGet.config" />
+  </Folder>
+  <Folder Name="/Solution Items/.config/">
+    <File Path=".config/dotnet-tools.json" />
+  </Folder>
+  <Project Path="src/mock-assembly/mock-assembly.csproj" />
+  <Project Path="src/nunit.agent.core.tests/nunit.agent.core.tests.csproj" />
+  <Project Path="src/nunit.agent.core/nunit.agent.core.csproj" />
+  <Project Path="src/PackageTestRunner/PackageTestRunner.csproj" Id="e2f44187-fe58-47a9-83bf-fb7e3b3cf8cf" />
+</Solution>

@@ -1,10 +1,8 @@
 ﻿// Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
-using NUnit.Common;
 using NUnit.Engine.Extensibility;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Reflection;
 
 #if NETCOREAPP3_1_OR_GREATER
@@ -19,10 +17,8 @@ namespace NUnit.Engine.Drivers
     /// </summary>
     public class NUnitFrameworkDriver : IFrameworkDriver
     {
-        private static readonly Version MINIMUM_NUNIT_VERSION_FOR_2018_API = new(3, 2, 0);
+        private static readonly Version MINIMUM_NUNIT_VERSION = new(3, 2, 0);
         private static readonly Logger log = InternalTrace.GetLogger(nameof(NUnitFrameworkDriver));
-
-        private readonly Version _nunitVersion;
 
 #if NETFRAMEWORK
         private readonly NUnitFrameworkApi _api;
@@ -39,9 +35,8 @@ namespace NUnit.Engine.Drivers
             Guard.ArgumentNotNull(nunitRef);
 
             ID = id;
-            _nunitVersion = nunitRef.Version.ShouldNotBeNull();
 
-            if (_nunitVersion >= MINIMUM_NUNIT_VERSION_FOR_2018_API)
+            if (nunitRef.Version >= MINIMUM_NUNIT_VERSION)
             {
                 API = "2018";
                 _api = (NUnitFrameworkApi)testDomain.CreateInstanceFromAndUnwrap(
@@ -74,8 +69,6 @@ namespace NUnit.Engine.Drivers
             Guard.ArgumentNotNullOrEmpty(id);
             Guard.ArgumentNotNull(nunitRef);
 
-            _nunitVersion = nunitRef.Version.ShouldNotBeNull();
-
             ID = id;
             API = api;
 
@@ -106,7 +99,6 @@ namespace NUnit.Engine.Drivers
             ID = id;
             API = "2018";
 
-            _nunitVersion = nunitRef.Version.ShouldNotBeNull();
             _api = new NUnitFrameworkApi2018(ID, nunitRef);
         }
 
@@ -160,19 +152,8 @@ namespace NUnit.Engine.Drivers
         /// <summary>
         /// Cancel the ongoing test run. If no  test is running, the call is ignored.
         /// </summary>
-        public void RequestStop() => _api.RequestStop();
-
-        /// <summary>
-        /// Force the current test run to stop, killing threads or processes if necessary.
-        /// If no tests are running, the call is ignored.
-        /// </summary>
-        public void ForcedStop()
-        {
-            if (_api.ForcedStopSupported)
-                _api.ForcedStop();
-            else
-                Environment.Exit(AgentExitCodes.CANCELLED_BY_FORCED_STOP);
-        }
+        /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
+        public void StopRun(bool force) => _api.StopRun(force);
 
         /// <summary>
         /// Returns information about the tests in an assembly.

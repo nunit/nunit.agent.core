@@ -178,17 +178,10 @@ namespace NUnit.Engine.Drivers
             ExecuteMethod(RUN_ASYNC_METHOD, [typeof(Action<string>), typeof(string)], callback, filter);
         }
 
-        public void RequestStop()
+        public void StopRun(bool force)
         {
-            ExecuteMethod(STOP_RUN_METHOD, false);
+            ExecuteMethod(STOP_RUN_METHOD, force);
         }
-
-        public void ForcedStop()
-        {
-            ExecuteMethod(STOP_RUN_METHOD, true);
-        }
-
-        public bool ForcedStopSupported => _nunitRef.Version.ShouldNotBeNull().Major is 3 or 4;
 
         public string Explore(string filter)
         {

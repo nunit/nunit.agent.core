@@ -179,7 +179,7 @@ namespace NUnit.Engine.Runners
                     ? GetCommonAppBase(package.SubPackages)
                     : Path.GetDirectoryName(package.FullName);
 
-            if (!string.IsNullOrEmpty(appBase))
+            if (appBase is not null && appBase.Length > 0)
             {
                 char lastChar = appBase[appBase.Length - 1];
                 if (lastChar != Path.DirectorySeparatorChar && lastChar != Path.AltDirectorySeparatorChar)

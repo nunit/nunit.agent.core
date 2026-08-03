@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "nunit.agent.core.tests": {
+      "commandName": "Project"
+    }
+  }
+}
