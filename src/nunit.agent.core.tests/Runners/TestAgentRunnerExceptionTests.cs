@@ -112,7 +112,7 @@ namespace NUnit.Engine.Runners
         [Test]
         public void RequestStop_Passes_Along_NUnitEngineException()
         {
-            _driver.When(x => x.StopRun(Arg.Any<bool>()))
+            _driver.When(x => x.ForcedStop())
                 .Do(x => { throw new NUnitEngineException("Message"); });
 
             var ex = Assert.Throws<NUnitEngineException>(() => _runner.ForcedStop());

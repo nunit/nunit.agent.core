@@ -150,10 +150,17 @@ namespace NUnit.Engine.Drivers
             _api.RunAsync(listener is not null ? new Action<string>(listener.OnTestEvent) : null, filter);
 
         /// <summary>
-        /// Cancel the ongoing test run. If no  test is running, the call is ignored.
+        /// Request the current test run to stop. If no tests are running,
+        /// the call is ignored.
         /// </summary>
         /// <param name="force">If true, cancel any ongoing test threads, otherwise wait for them to complete.</param>
-        public void StopRun(bool force) => _api.StopRun(force);
+        public void RequestStop() => _api.StopRun(false);
+
+        /// <summary>
+        /// Force the current test run to stop, killing threads or processes if necessary.
+        /// If no tests are running, the call is ignored.
+        /// </summary>
+        public void ForcedStop() => _api.StopRun(true);
 
         /// <summary>
         /// Returns information about the tests in an assembly.
