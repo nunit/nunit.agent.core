@@ -13,6 +13,10 @@
   <Folder Name="/Solution Items/.config/">
     <File Path=".config/dotnet-tools.json" />
   </Folder>
+  <Folder Name="/Solution Items/.github/" />
+  <Folder Name="/Solution Items/.github/workflows/">
+    <File Path=".github/workflows/NUnit.Agent.Core.CI.yml" />
+  </Folder>
   <Project Path="src/mock-assembly/mock-assembly.csproj" />
   <Project Path="src/nunit.agent.core.tests/nunit.agent.core.tests.csproj" />
   <Project Path="src/nunit.agent.core/nunit.agent.core.csproj" />
