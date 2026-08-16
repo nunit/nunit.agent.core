@@ -27,19 +27,19 @@
     <Reference Include="System.Web" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1' OR '$(TargetFramework)'=='net5.0' OR '$(TargetFramework)'=='net6.0'">
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.0" />
+  <ItemGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" VersionOverride="3.1.0"/>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)'=='net8.0'">
-    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="8.0.2" />
+  <ItemGroup Condition="'$(TargetFramework)'=='net6.0' OR '$(TargetFramework)'=='net8.0'">
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit.Engine.Api" Version="$(NUnitEngineApiVersion)" />
-    <PackageReference Include="NUnit.Common" Version="$(NUnitCommonVersion)" />
-    <PackageReference Include="NUnit.Extensibility" Version="$(NUnitExtensibilityVersion)" />
-    <PackageReference Include="TestCentric.Metadata" Version="$(TestCentricMetadataVersion)" />
+    <PackageReference Include="NUnit.Engine.Api" />
+    <PackageReference Include="NUnit.Common" />
+    <PackageReference Include="NUnit.Extensibility" />
+    <PackageReference Include="TestCentric.Metadata" />
   </ItemGroup>
 
 </Project>

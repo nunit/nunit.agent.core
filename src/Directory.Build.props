@@ -74,9 +74,9 @@
 
     <!-- Code Style Analyzers -->
     <ItemGroup>
-        <PackageReference Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556" PrivateAssets="all" />
+        <PackageReference Include="StyleCop.Analyzers.Unstable" PrivateAssets="all" />
         <GlobalAnalyzerConfigFiles Include="$(MSBuildThisFileDirectory)/StyleCop.Analyzers.globalconfig" />
-        <PackageReference Include="CSharpIsNullAnalyzer" Version="0.1.593" PrivateAssets="all" />
+        <PackageReference Include="CSharpIsNullAnalyzer" PrivateAssets="all" />
     </ItemGroup>
 
 </Project>
