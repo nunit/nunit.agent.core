@@ -1,15 +1,14 @@
 // Load the recipe
-#load nuget:?package=NUnit.Cake.Recipe&version=2.0.0-beta.4.7
+#load nuget:?package=NUnit.Cake.Recipe&version=2.0.0-beta.4.8
 // Comment out above line and uncomment below for local tests of recipe changes
-//#load ../NUnit.Cake.Recipe/src/NUnit.Cake.Recipe/content/*.cake
+//#load ../NUnit.Cake.Recipe/recipe/*.cake
 
 // Initialize BuildSettings
 BuildSettings.Initialize(
     Context,
     title: "NUnit Agent Core",
     githubRepository: "NUnit.Agent.Core",
-    solutionFile: "NUnit.Agent.Core.slnx",
-    buildWithMSBuild: false );
+    solutionFile: "NUnit.Agent.Core.slnx" );
 
 //////////////////////////////////////////////////////////////////////
 // INDIVIDUAL PACKAGE DEFINITIONS
