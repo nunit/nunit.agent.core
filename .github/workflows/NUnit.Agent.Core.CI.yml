@@ -46,7 +46,7 @@ jobs:
     - name: 🛠️ Install dotnet tools
       run: dotnet tool restore
 
-    - name: 🔨 Build, Test, Package and Publish (Cake script decides)
+    - name: 🔨 Build, Test, Package and Publish to MyGet (Cake script decides)
       run: dotnet cake --target=ContinuousIntegration --configuration=Release #--verbosity=diagnostic
 
     # Upload packages
