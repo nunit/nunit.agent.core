@@ -61,8 +61,7 @@ namespace NUnit.Engine.Agents
 
             // Set options that need to be in effect before the package
             // is loaded by using the command line.
-            if (traceLevel != "Off")
-                sb.Append(" --trace=").EscapeProcessArgument(traceLevel);
+            sb.Append(" --trace=").EscapeProcessArgument(traceLevel);
             if (debugAgent)
                 sb.Append(" --debug-agent");
             if (debugTests)
