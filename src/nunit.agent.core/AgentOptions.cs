@@ -111,7 +111,7 @@ namespace NUnit.Agents
         public string AgencyPid { get; } = string.Empty;
         public bool DebugTests { get; } = false;
         public bool DebugAgent { get; } = false;
-        public InternalTraceLevel TraceLevel { get; } = InternalTraceLevel.Off;
+        public InternalTraceLevel TraceLevel { get; } = InternalTraceLevel.Warning;
         public string WorkDirectory { get; } = string.Empty;
 
         public List<string> Files { get; } = new List<string>();

@@ -15,7 +15,7 @@ namespace NUnit.Agents
             new TestCaseData("AgencyPid", string.Empty),
             new TestCaseData("DebugAgent", false),
             new TestCaseData("DebugTests", false),
-            new TestCaseData("TraceLevel", InternalTraceLevel.Off),
+            new TestCaseData("TraceLevel", InternalTraceLevel.Warning),
             new TestCaseData("WorkDirectory", string.Empty)
         };
 
