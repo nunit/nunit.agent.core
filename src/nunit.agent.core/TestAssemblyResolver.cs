@@ -131,7 +131,7 @@ namespace NUnit.Engine.Internal
 
     #region ResolutionStrategy Classes
 
-    public abstract class ResolutionStrategy
+    internal abstract class ResolutionStrategy
     {
         public string Name => GetType().Name;
         public int Calls { get; set; }
@@ -141,7 +141,7 @@ namespace NUnit.Engine.Internal
             AssemblyLoadContext loadContext, AssemblyName assemblyName, [NotNullWhen(true)] out Assembly? loadedAssembly);
     }
 
-    public class TrustedPlatformAssembliesStrategy : ResolutionStrategy
+    internal class TrustedPlatformAssembliesStrategy : ResolutionStrategy
     {
         private static readonly Logger log = InternalTrace.GetLogger(typeof(TrustedPlatformAssembliesStrategy));
         public override bool TryToResolve(
@@ -181,7 +181,7 @@ namespace NUnit.Engine.Internal
         }
     }
 
-    public class RuntimeLibrariesStrategy : ResolutionStrategy
+    internal class RuntimeLibrariesStrategy : ResolutionStrategy
     {
         private static readonly Logger log = InternalTrace.GetLogger(typeof(RuntimeLibrariesStrategy));
 
@@ -244,7 +244,7 @@ namespace NUnit.Engine.Internal
         }
     }
 
-    public class AdditionalRuntimesStrategy : ResolutionStrategy
+    internal class AdditionalRuntimesStrategy : ResolutionStrategy
     {
         private string _runtimeName;
         private bool _x86;
@@ -273,14 +273,14 @@ namespace NUnit.Engine.Internal
         }
     }
 
-    public class WindowsDesktopStrategy : AdditionalRuntimesStrategy
+    internal class WindowsDesktopStrategy : AdditionalRuntimesStrategy
     {
         public WindowsDesktopStrategy(bool x86) : base("Microsoft.WindowsDesktop.App", x86)
         {
         }
     }
 
-    public class AspNetCoreStrategy : AdditionalRuntimesStrategy
+    internal class AspNetCoreStrategy : AdditionalRuntimesStrategy
     {
         public AspNetCoreStrategy(bool x86) : base("Microsoft.AspNetCore.App", x86)
         {

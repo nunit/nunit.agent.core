@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace NUnit.Engine.Drivers
 {
-    public interface NUnitFrameworkApi
+    internal interface NUnitFrameworkApi
     {
         /// <summary>
         /// Loads the tests in an assembly.

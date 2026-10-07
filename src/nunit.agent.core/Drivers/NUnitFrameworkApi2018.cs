@@ -19,9 +19,9 @@ namespace NUnit.Engine.Drivers
     /// may be used for NUnit 3.10 or higher.
     /// </summary>
 #if NETFRAMEWORK
-    public class NUnitFrameworkApi2018 : MarshalByRefObject, NUnitFrameworkApi
+    internal class NUnitFrameworkApi2018 : MarshalByRefObject, NUnitFrameworkApi
 #else
-    public class NUnitFrameworkApi2018 : NUnitFrameworkApi
+    internal class NUnitFrameworkApi2018 : NUnitFrameworkApi
 #endif
     {
         private static readonly Logger log = InternalTrace.GetLogger(nameof(NUnitFrameworkApi2018));

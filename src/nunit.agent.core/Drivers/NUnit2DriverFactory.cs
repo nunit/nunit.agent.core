@@ -8,7 +8,7 @@ using NUnit.Extensibility;
 
 namespace NUnit.Engine.Drivers
 {
-    public class NUnit2DriverFactory : IDriverFactory
+    internal class NUnit2DriverFactory : IDriverFactory
     {
         private const string NUNIT_FRAMEWORK = "nunit.framework";
         private const string NUNITLITE_FRAMEWORK = "nunitlite";

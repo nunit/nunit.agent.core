@@ -6,7 +6,7 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Drivers
 {
-    public class NUnit3DriverFactory : IDriverFactory
+    internal class NUnit3DriverFactory : IDriverFactory
     {
         internal const string NUNIT_FRAMEWORK = "nunit.framework";
         private static readonly Logger log = InternalTrace.GetLogger(typeof(NUnit3DriverFactory));
