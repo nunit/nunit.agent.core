@@ -8,7 +8,7 @@ using NUnit.Engine.Extensibility;
 
 namespace NUnit.Engine.Drivers
 {
-    public sealed class InvalidAssemblyFrameworkDriver : IFrameworkDriver
+    internal sealed class InvalidAssemblyFrameworkDriver : IFrameworkDriver
     {
         private readonly string _name;
         private readonly string _fullname;

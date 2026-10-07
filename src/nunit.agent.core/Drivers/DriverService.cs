@@ -15,7 +15,7 @@ namespace NUnit.Engine.Drivers
     /// The DriverService provides drivers able to load and run tests
     /// using various frameworks.
     /// </summary>
-    public class DriverService : IDriverService
+    internal class DriverService : IDriverService
     {
 #if NETFRAMEWORK
         private const string TYPE_EXTENSION_PATH = "/NUnit/Engine/TypeExtensions/";

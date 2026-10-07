@@ -18,7 +18,7 @@ namespace NUnit.Engine.Runners
     /// deal directly with a framework driver. It loads and runs tests in a single
     /// assembly, creating an <see cref="IFrameworkDriver"/> to do so.
     /// </summary>
-    public abstract class TestAgentRunner : ITestEngineRunner
+    internal abstract class TestAgentRunner : ITestEngineRunner
     {
         private readonly Logger log = InternalTrace.GetLogger(typeof(TestAgentRunner));
 

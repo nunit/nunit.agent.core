@@ -15,7 +15,7 @@ namespace NUnit.Engine.Drivers
     /// NUnitFrameworkDriver is used by the test-runner to load and run
     /// tests using the NUnit framework assembly, versions 3 and up.
     /// </summary>
-    public class NUnitFrameworkDriver : IFrameworkDriver
+    internal class NUnitFrameworkDriver : IFrameworkDriver
     {
         private static readonly Version MINIMUM_NUNIT_VERSION = new(3, 2, 0);
         private static readonly Logger log = InternalTrace.GetLogger(nameof(NUnitFrameworkDriver));

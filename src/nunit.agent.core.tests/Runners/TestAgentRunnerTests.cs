@@ -14,7 +14,7 @@ namespace NUnit.Engine.Runners
 #if NETFRAMEWORK
     [TestFixture(typeof(TestDomainRunner))]
 #endif
-    public class TestAgentRunnerTests<TRunner> : ITestEventListener
+    internal class TestAgentRunnerTests<TRunner> : ITestEventListener
         where TRunner : TestAgentRunner
     {
         protected TestPackage _package;

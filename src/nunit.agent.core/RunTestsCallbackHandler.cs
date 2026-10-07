@@ -7,7 +7,7 @@ using System.Web.UI;
 
 namespace NUnit.Engine
 {
-    public class RunTestsCallbackHandler : MarshalByRefObject, ICallbackEventHandler
+    internal class RunTestsCallbackHandler : MarshalByRefObject, ICallbackEventHandler
     {
         private readonly ITestEventListener? _listener;
 

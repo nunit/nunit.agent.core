@@ -6,7 +6,7 @@ using System.Web.UI;
 
 namespace NUnit.Engine
 {
-    public class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
+    internal class CallbackHandler : MarshalByRefObject, ICallbackEventHandler
     {
         public string? Result { get; private set; }
 

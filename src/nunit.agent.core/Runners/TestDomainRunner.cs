@@ -8,7 +8,7 @@ namespace NUnit.Engine.Runners
     /// TestDomainRunner loads and runs tests in a separate
     /// domain whose lifetime it controls.
     /// </summary>
-    public class TestDomainRunner : TestAgentRunner
+    internal class TestDomainRunner : TestAgentRunner
     {
         private static readonly Logger log = InternalTrace.GetLogger(typeof(TestDomainRunner));
 

@@ -19,7 +19,7 @@ namespace NUnit.Engine.Runners
     /// The DomainManager class handles the creation and unloading
     /// of domains as needed and keeps track of all existing domains.
     /// </summary>
-    public class DomainManager
+    internal class DomainManager
     {
         private static readonly Logger log = InternalTrace.GetLogger(typeof(DomainManager));
 

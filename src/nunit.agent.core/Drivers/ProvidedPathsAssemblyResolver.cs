@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace NUnit.Engine.Drivers
 {
-    public class ProvidedPathsAssemblyResolver
+    internal class ProvidedPathsAssemblyResolver
     {
         private static readonly Logger log = InternalTrace.GetLogger(typeof(ProvidedPathsAssemblyResolver));
 
