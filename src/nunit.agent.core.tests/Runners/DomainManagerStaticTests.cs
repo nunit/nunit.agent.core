@@ -91,7 +91,7 @@ namespace NUnit.Engine.Runners
 
             var package = new TestPackage(filePath);
             if (appBase is not null)
-                package.Settings.Add(SettingDefinitions.BasePath.WithValue(appBase));
+                package.AddSetting(SettingDefinitions.BasePath.WithValue(appBase), false);
 
             Assert.That(DomainManager.GetApplicationBase(package), Is.SamePath(expected));
         }
@@ -122,7 +122,7 @@ namespace NUnit.Engine.Runners
 
             var package = new TestPackage(filePath);
             if (configSetting is not null)
-                package.Settings.Add(SettingDefinitions.ConfigurationFile.WithValue(configSetting));
+                package.AddSetting(SettingDefinitions.ConfigurationFile.WithValue(configSetting), false);
 
             Assert.That(DomainManager.GetConfigFile(appBase, package), Is.EqualTo(expected));
         }

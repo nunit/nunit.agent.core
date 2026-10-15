@@ -51,7 +51,7 @@ namespace NUnit.Engine.Runners
             string basePath = Path.GetDirectoryName(Path.GetDirectoryName(assemblyDir))!;
             string relPath = assemblyDir.Substring(basePath.Length + 1);
 
-            _package.Settings.Add(SettingDefinitions.BasePath.WithValue(basePath));
+            _package.AddSetting(SettingDefinitions.BasePath.WithValue(basePath), false);
             var domain = _domainManager.CreateDomain(_package);
 
             Assert.That(domain, Is.Not.Null);

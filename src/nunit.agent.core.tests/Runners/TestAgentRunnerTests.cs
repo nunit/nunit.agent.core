@@ -48,7 +48,7 @@ namespace NUnit.Engine.Runners
         [Test]
         public void ListResolutionStats()
         {
-            _package.AddSetting(SettingDefinitions.ListResolutionStats.WithValue(true));
+            _package.AddSetting(SettingDefinitions.ListResolutionStats.WithValue(true), true);
             var result = _runner.Load();
             CheckLoadResult(result);
         }
