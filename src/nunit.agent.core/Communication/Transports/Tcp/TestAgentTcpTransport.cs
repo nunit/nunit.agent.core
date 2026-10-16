@@ -3,7 +3,6 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
-using System.Xml.Serialization;
 using NUnit.Engine.Agents;
 using NUnit.Engine.Communication.Messages;
 using NUnit.Engine.Communication.Protocols;
@@ -23,7 +22,6 @@ namespace NUnit.Engine.Communication.Transports.Tcp
         private readonly string _agencyUrl;
         private Socket? _clientSocket;
         private ITestEngineRunner? _runner;
-        private XmlSerializer _testPackageSerializer = new XmlSerializer(typeof(TestPackage));
 
         public TestAgentTcpTransport(RemoteTestAgent agent, string serverUrl)
         {
