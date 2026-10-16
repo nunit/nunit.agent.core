@@ -1,5 +1,6 @@
 // Copyright (c) Charlie Poole, Rob Prouse and Contributors. MIT License - see LICENSE.txt
 
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -22,6 +23,8 @@ namespace NUnit.Engine.Communication.Transports.Tcp
         private readonly string _agencyUrl;
         private Socket? _clientSocket;
         private ITestEngineRunner? _runner;
+        private readonly object _sendLock = new object();
+        private int _runInProgress;
 
         public TestAgentTcpTransport(RemoteTestAgent agent, string serverUrl)
         {
@@ -61,6 +64,7 @@ namespace NUnit.Engine.Communication.Transports.Tcp
         public void Stop()
         {
             Agent.StopSignal.Set();
+            _clientSocket?.Close();
         }
 
         public ITestEngineRunner CreateRunner(TestPackage package)
@@ -73,64 +77,135 @@ namespace NUnit.Engine.Communication.Transports.Tcp
             bool keepRunning = true;
             var socketReader = new SocketReader(_clientSocket.ShouldNotBeNull(), new BinarySerializationProtocol());
 
-            while (keepRunning)
+            try
             {
-                var command = socketReader.GetNextMessage();
-
-                switch (command.Code)
+                while (keepRunning)
                 {
-                    case MessageCode.CreateRunner:
-                        var package = PackageHelper.FromXml(command.Data!);
-                        _runner = CreateRunner(package);
-                        break;
-                    case MessageCode.LoadCommand:
-                        SendResult(_runner.ShouldNotBeNull().Load().Xml.OuterXml);
-                        break;
-                    case MessageCode.ReloadCommand:
-                        SendResult(_runner.ShouldNotBeNull().Reload().Xml.OuterXml);
-                        break;
-                    case MessageCode.UnloadCommand:
-                        _runner.ShouldNotBeNull().Unload();
-                        break;
-                    case MessageCode.ExploreCommand:
-                        var filter = new TestFilter(command.Data!);
-                        SendResult(_runner.ShouldNotBeNull().Explore(filter).Xml.OuterXml);
-                        break;
-                    case MessageCode.CountCasesCommand:
-                        filter = new TestFilter(command.Data!);
-                        SendResult(_runner.ShouldNotBeNull().CountTestCases(filter).ToString());
-                        break;
-                    case MessageCode.RunCommand:
-                        filter = new TestFilter(command.Data!);
-                        SendResult(_runner.ShouldNotBeNull().Run(this, filter).Xml.OuterXml);
-                        break;
+                    var command = socketReader.GetNextMessage();
 
-                    case MessageCode.RunAsyncCommand:
-                        filter = new TestFilter(command.Data!);
-                        _runner.ShouldNotBeNull().RunAsync(this, filter);
-                        break;
+                    // Only stop commands may operate on a runner while its run is active.
+                    if (Volatile.Read(ref _runInProgress) != 0
+                        && command.Code != MessageCode.RequestStopCommand
+                        && command.Code != MessageCode.ForcedStopCommand
+                        && command.Code != MessageCode.StopAgent)
+                        throw new NUnitEngineException("A run is already active on this agent.");
 
-                    case MessageCode.StopAgent:
-                        keepRunning = false;
-                        break;
+                    switch (command.Code)
+                    {
+                        case MessageCode.CreateRunner:
+                            var package = PackageHelper.FromXml(command.Data!);
+                            _runner = CreateRunner(package);
+                            break;
+                        case MessageCode.LoadCommand:
+                            SendResult(_runner.ShouldNotBeNull().Load().Xml.OuterXml);
+                            break;
+                        case MessageCode.ReloadCommand:
+                            SendResult(_runner.ShouldNotBeNull().Reload().Xml.OuterXml);
+                            break;
+                        case MessageCode.UnloadCommand:
+                            _runner.ShouldNotBeNull().Unload();
+                            break;
+                        case MessageCode.ExploreCommand:
+                            var filter = new TestFilter(command.Data!);
+                            SendResult(_runner.ShouldNotBeNull().Explore(filter).Xml.OuterXml);
+                            break;
+                        case MessageCode.CountCasesCommand:
+                            filter = new TestFilter(command.Data!);
+                            SendResult(_runner.ShouldNotBeNull().CountTestCases(filter).ToString());
+                            break;
+                        case MessageCode.RunCommand:
+                            filter = new TestFilter(command.Data!);
+                            StartRun(filter);
+                            break;
+
+                        case MessageCode.RunAsyncCommand:
+                            filter = new TestFilter(command.Data!);
+                            _runner.ShouldNotBeNull().RunAsync(this, filter);
+                            break;
+
+                        case MessageCode.RequestStopCommand:
+                            _runner.ShouldNotBeNull().RequestStop();
+                            break;
+
+                        case MessageCode.ForcedStopCommand:
+                            _runner.ShouldNotBeNull().ForcedStop();
+                            break;
+
+                        case MessageCode.StopAgent:
+                            keepRunning = false;
+                            break;
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                // There is no error-result frame in this protocol. Close the connection
+                // so the engine reports an infrastructure failure rather than success.
+                if (!Agent.StopSignal.WaitOne(0))
+                    log.Error("Agent command processing failed.", ex);
+            }
+            finally
+            {
+                Stop();
+            }
+        }
 
-            Stop();
+        /// <summary>
+        /// Keeps the command reader available for stop requests throughout a synchronous run.
+        /// The worker still sends the same progress frames and final result as the old loop.
+        /// </summary>
+        private void StartRun(TestFilter filter)
+        {
+            var runner = _runner.ShouldNotBeNull();
+            Interlocked.Exchange(ref _runInProgress, 1);
+            var worker = new Thread(() =>
+            {
+                try
+                {
+                    var result = runner.Run(this, filter).Xml.OuterXml;
+                    // The runner is quiescent before its terminal result is visible.
+                    Interlocked.Exchange(ref _runInProgress, 0);
+                    SendResult(result);
+                }
+                catch (Exception ex)
+                {
+                    log.Error("Agent execution failed.", ex);
+                    Stop();
+                }
+            })
+            { IsBackground = true };
+            worker.Start();
         }
 
         private void SendResult(string result)
         {
             var resultMessage = new TestEngineMessage(MessageCode.CommandResult, result);
             var bytes = new BinarySerializationProtocol().Encode(resultMessage);
-            _clientSocket.ShouldNotBeNull().Send(bytes);
+            SendMessage(bytes);
         }
 
         public void OnTestEvent(string report)
         {
             var progressMessage = new TestEngineMessage(MessageCode.ProgressReport, report);
             var bytes = new BinarySerializationProtocol().Encode(progressMessage);
-            _clientSocket.ShouldNotBeNull().Send(bytes);
+            SendMessage(bytes);
+        }
+
+        // A frame must be sent in full without interleaving another callback's frame.
+        private void SendMessage(byte[] bytes)
+        {
+            lock (_sendLock)
+            {
+                var socket = _clientSocket.ShouldNotBeNull();
+                int offset = 0;
+                while (offset < bytes.Length)
+                {
+                    int sent = socket.Send(bytes, offset, bytes.Length - offset, SocketFlags.None);
+                    if (sent == 0)
+                        throw new SocketException((int)SocketError.ConnectionReset);
+                    offset += sent;
+                }
+            }
         }
     }
 }
