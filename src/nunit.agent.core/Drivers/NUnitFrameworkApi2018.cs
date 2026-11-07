@@ -178,9 +178,34 @@ namespace NUnit.Engine.Drivers
             ExecuteMethod(RUN_ASYNC_METHOD, [typeof(Action<string>), typeof(string)], callback, filter);
         }
 
+        /// <summary>
+        /// Requests a stop using the signature supported by the loaded framework.
+        /// </summary>
+        /// <param name="force">Whether to request the legacy framework's forced stop.</param>
+        /// <remarks>
+        /// Current frameworks expose a parameterless cooperative stop. Forced process
+        /// termination is the engine's responsibility when that API is in use.
+        /// Both framework stop methods return void, unlike the result-producing APIs.
+        /// </remarks>
         public void StopRun(bool force)
         {
-            ExecuteMethod(STOP_RUN_METHOD, force);
+            CheckLoadWasCalled();
+            var controllerType = _frameworkControllerType.ShouldNotBeNull();
+            var method = controllerType.GetMethod(STOP_RUN_METHOD, Type.EmptyTypes);
+            if (method is not null)
+            {
+                if (force)
+                    throw new NotSupportedException("This framework supports cooperative stop only. The engine must terminate the agent process to force a stop.");
+
+                method.Invoke(_frameworkController, null);
+                return;
+            }
+
+            method = controllerType.GetMethod(STOP_RUN_METHOD, [typeof(bool)]);
+            if (method is null)
+                throw new NUnitEngineException(INVALID_FRAMEWORK_MESSAGE);
+
+            method.Invoke(_frameworkController, [force]);
         }
 
         public string Explore(string filter)
